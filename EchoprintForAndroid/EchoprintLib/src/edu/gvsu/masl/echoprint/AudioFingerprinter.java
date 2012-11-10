@@ -37,6 +37,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -57,9 +58,9 @@ public class AudioFingerprinter implements Runnable
 	public final static String META_SCORE_KEY = "meta_score";
 	public final static String SCORE_KEY = "score";
 	public final static String ALBUM_KEY = "release";
-	public final static String TITLE_KEY = "track";
-	public final static String TRACK_ID_KEY = "track_id";
-	public final static String ARTIST_KEY = "artist";
+	public final static String TITLE_KEY = "title";
+	public final static String TRACK_ID_KEY = "id";
+	public final static String ARTIST_KEY = "artist_name";
 	
 //	private final String SERVER_URL = "<your server address here>/query?fp_code=";
 	private final String SERVER_URL = "http://developer.echonest.com/api/v4/song/identify?api_key=FBJYI4PLNIO72ENS0&version=4.12&code=";
@@ -211,6 +212,9 @@ public class AudioFingerprinter implements Runnable
 	    			// fetch data from echonest
 	    			time = System.currentTimeMillis();
 	    			
+	    			//TODO: REMOVE THIS HARDCODED CODE! :)
+	    			//code = "eJzFV1uuXCkQ2xIFFBTLqef-lzA-HWn6TkuhP6JoFMnShdM8XLaLtNZotAt0v8GcN-C8gdQN9Aq5L0CDLvDlvvcbLb-B0wWo-Q36usGQC3y5EbcbBF2AWtygnxusvIGOC_S2LvBHil10A5UbXOvbwi5AI27what-gxgX6GNf4I-Y5HmD027w95jkdYMvXPEF_mJOfknC_0mTdybdL9CfvX8LrdkNvjA5bvAnTNoVPC7whaurf79w9Re7c9xgrxtcuaLVb3DkBmY3CP4t7KTplZRjj2ZM21TS_RzJw1o9WkpPKg_rc_XjyaMrLbZI2nXG6cM6nggKZtNW0-yx-9JGqCLmNgmeF1hyu0-nQ7tL6DBClQ0jox9xy0Vgd1Gv3scZW8Z2kaI9bWCbOaRH1pyrxqDUWrOCcoK3cus5f4Azut3H2A84beXJWdN3UVDnEkXZl-6sbLZwDO-efkKTc28fyV13o40fuWhkm9yLXNZzgm0I7iUbx8ix5oggOdqGHtxkzVZokD1GnwEOjjcfnua8D1hYucmKCb_WwT4UX3A_iXfCNHuDUzX7GHtD2gjZ3p-mt-ZS1A5LeONda2XUKojeuOqhsLGc0Yfiy9alqVVPjVM4Cio3EHAjl7L3jENRNZnSm45uyTFYW8bYfdvyMQv3DURECN4XbGO2KBnQjs_G2EX2WFxazpI0shhcDga_eyZRocZ4tGTo6RFi9QZu_PPPD9hMeIPR5jaDw3XvwRVrS9Qp2am81i6c5czaO0Nyj96l_KziRwTDZbdDyyfY08DQFj3MxqPkvFbOUwqR4uLTWAQ87iV8bFqXZW2YzIRS5uyQCSdFMztnByb7Oovn8Ca4rE_CP3wrGCwoy5_VYCw3Y_T0jcovYpRCIcZddRy1iFZbt2yQBP4R0ZZz7mg4vZ2-cUB4YbE_j3pR3CrASfcDkZTKqjcsCbjov2NvIAS4OGcfBHUsETO44tBga4oaJjaXOE1O9IW_BtmMR_gSueLgJQTz7m5zqqbhlhvCQQctkRRYGqYupb6ToTKIPs6IguHo7FNIhtEblHDcaZoveA6W65AOnM9mCyfRgt4QFIXD0GNPmscZrHM89Xx2LaL9fLFar2M0yjqKCx_X6fgZbGfLTqxyNNnJiBjrbAuiVfTcHwDnOn2MvcFzggi80aF3KsoWPmMK2XHYpyOG5muWUHp9zRLCTF-zR8mzpy_9NXtsK8JmM4D5tfKaB26isekUTjfH0IDgIEMTmORZzxUbOuzd5cCUMP4kHoHcGPvwa6Pt9AT4PBBN-ILMVGs_2eagR1FUGksmlu5bVYxXCaIK1-i0BZbuEGWqKpUVGgFqZNuhW0udhg7w2A1XMDOIBxYv45CzTbjyDWdYzY-xN8AfHWp97tgdmw40jYCIjCAp2KPFCLR4SFMnao2wjRynikTc19LhgYU2SoIsh5YM_ehAHk0E1QdTjmSBQ-BWRnMqcNOQYSdYA5vhJk-Yklsr84Ow9nx0iXjuqM1Q1MZOxZO72U73DhJgCUdubOEW3JF0T0dTeDyaF7VEOf0MhrQED8jAt0_PRHHHCdiYxjy4h-YyWeho6w1709wfY29AbBhUgxYNAZFgYyfL7NAv2tDHbGcoCa3ozI1wjtes9McvASeb4_8uGn32hphXe0KKTXDdQkI-ZxYTQr4m2jPaupv2Xy1f8TpY6GoOiSGIUBxOqzbBDQwTOFPy0oUuNyYhSZ2wE8Oz--HrzAUa8slmHPjh4nnfzQyofi7oHKUbC63djiKx0XYW3IAY11RHAeUH0Ir1OfYv_AOHwF5P";
+	    			
 					String urlstr = SERVER_URL + code;		
 					System.out.println(">>>>>" + urlstr);
 					HttpClient client = new DefaultHttpClient();
@@ -241,40 +245,66 @@ public class AudioFingerprinter implements Runnable
 	    			// parse JSON
 		    		JSONObject jobj = new JSONObject(result);
 		    		
-		    		if(jobj.has("code"))
-		    			Log.d("Fingerprinter", "Response code:" + jobj.getInt("code") + " (" + this.messageForCode(jobj.getInt("code")) + ")");
-		    		
-		    		if(jobj.has("match"))
-		    		{
-		    			if(jobj.getBoolean("match"))
-		    			{
+		    		System.out.println(">>RESULTADO:"+result);
+		    		if(jobj.has("response")){
+		    			JSONObject status = jobj.getJSONObject("response").getJSONObject("status");
+		    			JSONArray songs = jobj.getJSONObject("response").getJSONArray("songs");
+		    			
+		    			if(jobj.has("code"))
+			    			Log.d("Fingerprinter", "Response code:" + jobj.getInt("code") + " (" + this.messageForCode(jobj.getInt("code")) + ")");
+			    		
+		    			
+		    			if(songs.length() == 0){
+		    				didNotFindMatchForCode(code);
+		    				System.out.println("songs is empty");
+		    			}else{
+		    				JSONObject song = songs.getJSONObject(0);
 		    				Hashtable<String, String> match = new Hashtable<String, String>();
-		    				match.put(SCORE_KEY, jobj.getDouble(SCORE_KEY) + "");
-		    				match.put(TRACK_ID_KEY, jobj.getString(TRACK_ID_KEY));
+		    				match.put(SCORE_KEY, song.getDouble(SCORE_KEY) + "");
+		    				match.put(TRACK_ID_KEY, song.getString(TRACK_ID_KEY));
+		    				if(song.has(TITLE_KEY)) match.put(TITLE_KEY, song.getString(TITLE_KEY));
+		    				if(song.has(ARTIST_KEY)) match.put(ARTIST_KEY, song.getString(ARTIST_KEY));
+		    				if(song.has(ALBUM_KEY)) match.put(ALBUM_KEY, song.getString(ALBUM_KEY));
 		    				
-		    				// the metadata dictionary IS NOT included by default in the API demo server
-		    				// replace line 66/67 in API.py with:
-		    				// return json.dumps({"ok":True,"message":response.message(), "match":response.match(), "score":response.score, \
-	                        // "qtime":response.qtime, "track_id":response.TRID, "total_time":response.total_time, "metadata":response.metadata})
-		    				if(jobj.has("metadata"))
-		    				{
-		    					JSONObject metadata = jobj.getJSONObject("metadata");
-			    						    				
-			    				if(metadata.has(SCORE_KEY)) match.put(META_SCORE_KEY, metadata.getDouble(SCORE_KEY) + "");
-			    				if(metadata.has(TITLE_KEY)) match.put(TITLE_KEY, metadata.getString(TITLE_KEY));
-			    				if(metadata.has(ARTIST_KEY)) match.put(ARTIST_KEY, metadata.getString(ARTIST_KEY));
-			    				if(metadata.has(ALBUM_KEY)) match.put(ALBUM_KEY, metadata.getString(ALBUM_KEY));
-		    				}
 		    				
 		    				didFindMatchForCode(match, code);
 		    			}
-	    				else
-	    					didNotFindMatchForCode(code);	    			
-		    		}	    		
-		    		else
-		    		{
-		    			didFailWithException(new Exception("Unknown error"));
+		    			
 		    		}
+		    		else{
+			    		didFailWithException(new Exception("No response."));
+			    	}
+//		    		if(jobj.has("match"))
+//		    		{
+//		    			if(jobj.getBoolean("match"))
+//		    			{
+//		    				Hashtable<String, String> match = new Hashtable<String, String>();
+//		    				match.put(SCORE_KEY, jobj.getDouble(SCORE_KEY) + "");
+//		    				match.put(TRACK_ID_KEY, jobj.getString(TRACK_ID_KEY));
+//		    				
+//		    				// the metadata dictionary IS NOT included by default in the API demo server
+//		    				// replace line 66/67 in API.py with:
+//		    				// return json.dumps({"ok":True,"message":response.message(), "match":response.match(), "score":response.score, \
+//	                        // "qtime":response.qtime, "track_id":response.TRID, "total_time":response.total_time, "metadata":response.metadata})
+//		    				if(jobj.has("metadata"))
+//		    				{
+//		    					JSONObject metadata = jobj.getJSONObject("metadata");
+//			    						    				
+//			    				if(metadata.has(SCORE_KEY)) match.put(META_SCORE_KEY, metadata.getDouble(SCORE_KEY) + "");
+//			    				if(metadata.has(TITLE_KEY)) match.put(TITLE_KEY, metadata.getString(TITLE_KEY));
+//			    				if(metadata.has(ARTIST_KEY)) match.put(ARTIST_KEY, metadata.getString(ARTIST_KEY));
+//			    				if(metadata.has(ALBUM_KEY)) match.put(ALBUM_KEY, metadata.getString(ALBUM_KEY));
+//		    				}
+//		    				
+//		    				didFindMatchForCode(match, code);
+//		    			}
+//	    				else
+//	    					didNotFindMatchForCode(code);	    			
+//		    		}	    		
+//		    		else
+//		    		{
+//		    			didFailWithException(new Exception("Unknown error"));
+//		    		}
 		    		
 		    		firstRun = false;
 				
