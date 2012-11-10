@@ -19,3 +19,8 @@ gen/
 local.properties
 
 .metadata/
+
+EchoprintForAndroid/EchoprintLib/bin/
+EchoprintForAndroid/EchoprintLib/gen/
+EchoprintForAndroid/EchoprintTest/bin
+EchoprintForAndroid/EchoprintTest/gen
