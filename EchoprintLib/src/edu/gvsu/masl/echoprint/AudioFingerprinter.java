@@ -61,7 +61,8 @@ public class AudioFingerprinter implements Runnable
 	public final static String TRACK_ID_KEY = "track_id";
 	public final static String ARTIST_KEY = "artist";
 	
-	private final String SERVER_URL = "<your server address here>/query?fp_code=";
+//	private final String SERVER_URL = "<your server address here>/query?fp_code=";
+	private final String SERVER_URL = "http://developer.echonest.com/api/v4/song/identify?api_key=FBJYI4PLNIO72ENS0&version=4.12&code=";
 	
 	private final int FREQUENCY = 11025;
 	private final int CHANNEL = AudioFormat.CHANNEL_IN_MONO;
@@ -210,7 +211,8 @@ public class AudioFingerprinter implements Runnable
 	    			// fetch data from echonest
 	    			time = System.currentTimeMillis();
 	    			
-					String urlstr = SERVER_URL + code;			
+					String urlstr = SERVER_URL + code;		
+					System.out.println(">>>>>" + urlstr);
 					HttpClient client = new DefaultHttpClient();
 	    			HttpGet get = new HttpGet(urlstr);
 	    			
