@@ -27,8 +27,10 @@
 package edu.gvsu.masl;
 
 import java.util.Hashtable;
+import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -48,7 +50,10 @@ public class EchoprintTestActivity extends Activity implements AudioFingerprinte
 	boolean recording, resolved;
 	AudioFingerprinter fingerprinter;
 	TextView status;
+	TextView song_list;
 	Button btn;
+	String currentsong;
+	AudioFingerprinterListener afListner;
 	
     @Override       
     public void onCreate(Bundle savedInstanceState) 
@@ -56,24 +61,61 @@ public class EchoprintTestActivity extends Activity implements AudioFingerprinte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        afListner = this;
+        
         btn = (Button) findViewById(R.id.recordButton);
         
         status = (TextView) findViewById(R.id.status);
+        song_list = (TextView) findViewById(R.id.song_list);
         btn.setOnClickListener(new View.OnClickListener() 
         {
             public void onClick(View v) 
             {
+            	System.out.println("Recording: "+recording);
                 // Perform action on click
             	if(recording)
-            	{            		 
-        			fingerprinter.stop();        			
+            	{            	
+            		if (fingerprinter != null)
+            			fingerprinter.stop();
+        			recording = false;
             	}
             	else
-            	{            		
-            		if(fingerprinter == null)
-            			fingerprinter = new AudioFingerprinter(EchoprintTestActivity.this);
+            	{   
+            		recording = true;
+            		btn.setText("Stop");
             		
-            		fingerprinter.fingerprint(15);
+            		new Thread(new Runnable() {
+            		    public void run() 
+            		    {
+            		    	System.out.println("LETS RECORD!");
+            		    	while(recording){
+    	            			if(fingerprinter == null)
+    		            			fingerprinter = new AudioFingerprinter(afListner);
+    		            		System.out.println(">>Fingerprint");
+    		            		fingerprinter.fingerprint(20);
+    		            		//Now waits for 40 seconds
+    		                    try {
+    		                        synchronized(this){
+    		                            wait(40000);
+    		                        }
+    		                    }
+    		                    catch(InterruptedException ex){                    
+    		                    }
+                			}
+            		    }
+            		}).start();
+
+            	           		
+	            		
+	            		//Now waits for 40 seconds
+//	                    try {
+//	                        synchronized(this){
+//	                            wait(40000);
+//	                        }
+//	                    }
+//	                    catch(InterruptedException ex){                    
+//	                    }
+            		
             	}
             }
         });
@@ -86,7 +128,7 @@ public class EchoprintTestActivity extends Activity implements AudioFingerprinte
 		if(!resolved)
 			status.setText("Idle...");
 		
-		recording = false;
+		//recording = false;
 	}
 	
 	public void didFinishListeningPass()
@@ -96,7 +138,7 @@ public class EchoprintTestActivity extends Activity implements AudioFingerprinte
 	{
 		status.setText("Listening...");
 		btn.setText("Stop");
-		recording = true;
+		//recording = true;
 		resolved = false;
 	}
 
@@ -113,6 +155,15 @@ public class EchoprintTestActivity extends Activity implements AudioFingerprinte
 	{
 		resolved = true;
 		status.setText("Match: \n" + table);
+		String song = table.get("artist_name") + " - " + table.get("title");
+		String id = table.get("id");
+		System.out.println("[ID] "+id);
+		System.out.println("[CURRENT SONG] "+currentsong);
+		if (!id.equals(currentsong)){
+			currentsong = id;
+			song_list.setText(song_list.getText() + "\n" + song);
+		}
+		
 	}
 
 	public void didNotFindMatchForCode(String code) 
