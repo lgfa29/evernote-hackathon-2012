@@ -24,3 +24,8 @@ EchoprintForAndroid/EchoprintLib/bin/
 EchoprintForAndroid/EchoprintLib/gen/
 EchoprintForAndroid/EchoprintTest/bin
 EchoprintForAndroid/EchoprintTest/gen
+
+
+EchoprintForAndroid/EchoprintLib/.classpath
+EchoprintForAndroid/EchoprintTest/.classpath
+
