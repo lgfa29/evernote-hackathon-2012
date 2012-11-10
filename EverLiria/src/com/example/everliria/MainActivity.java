@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -15,6 +16,8 @@ public class MainActivity extends Activity {
 	
 	//Layouts
 	EditText inputName;
+	Button startListening;
+	Button stopListening;
 	
 	MusicRecognizer mR = new MusicRecognizer();
 
@@ -23,6 +26,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         inputName = (EditText)findViewById(R.id.input_list_name);
+        startListening = (Button)findViewById(R.id.start);
+        stopListening = (Button)findViewById(R.id.stop);
     }
 
     @Override

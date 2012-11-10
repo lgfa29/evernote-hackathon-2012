@@ -24,15 +24,30 @@
         android:layout_below="@id/text_name_list"
         android:textSize="20dp"
         android:inputType="text" />
-    
+
     <Button
-        android:id="@+id/create"
-        android:layout_below="@id/input_list_name"
+        android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-    	android:layout_marginTop="10dp"
+        android:layout_below="@+id/input_list_name"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/green_button_selector"
         android:onClick="newList"
-        android:text="@string/create_list" />
+        android:text="@string/start_list" 
+        android:textColor="@android:color/white"/>
+    
+    <Button
+        android:id="@+id/stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/input_list_name"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/green_button_selector"
+        android:onClick="newList"
+        android:text="@string/stop_list" 
+        android:textColor="@android:color/white"
+        android:visibility="gone"/>
 
 </RelativeLayout>
