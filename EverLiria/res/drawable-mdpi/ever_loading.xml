@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/elephant_loading" android:oneshot="false">
+    <item android:drawable="@drawable/green_button" android:duration="50" />
+    <item android:drawable="@drawable/dark_green_button" android:duration="50" />
+ </animation-list>
