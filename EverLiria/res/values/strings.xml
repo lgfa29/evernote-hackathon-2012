@@ -5,7 +5,7 @@
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">EverLiria</string>
     <string name="create_list">Create New List</string>
-    <string name="write_list_name">List Name</string>
+    <string name="write_list_name">LIST NAME</string>
     <string name="err_activity_not_found">Unknown intent</string>
 
 </resources>

@@ -12,11 +12,11 @@ public class MainActivity extends Activity {
 	
 	// Names of Evernote-specific Intent actions and extras
 	public static final String ACTION_NEW_NOTE             = "com.evernote.action.CREATE_NEW_NOTE";
-	public static final String INTENT_EXTRA_TITLE 		   = "android.intent.extra.TITLE";
-	public static final String INTENT_EXTRA_TEXT 		   = "android.intent.extra.TEXT";
 	
 	//Layouts
 	EditText inputName;
+	
+	MusicRecognizer mR = new MusicRecognizer();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,8 +37,8 @@ public class MainActivity extends Activity {
     public void newList(View view) {
     	Intent intent = new Intent();
     	intent.setAction(ACTION_NEW_NOTE);
-    	intent.putExtra(INTENT_EXTRA_TITLE, inputName.getText().toString());
-    	intent.putExtra(INTENT_EXTRA_TEXT, "musica1 \nmusica2 \nmusica3");
+    	intent.putExtra(Intent.EXTRA_TITLE, inputName.getText().toString());
+    	intent.putExtra(Intent.EXTRA_TEXT, mR.getMusicList());
     	try {
     		startActivity(intent);
     	} catch (android.content.ActivityNotFoundException ex) {
