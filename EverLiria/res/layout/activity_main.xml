@@ -3,13 +3,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
+    <TextView 
+        android:id="@+id/text_name_list"
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_marginLeft="15dp"
+    	android:layout_marginTop="20dp"
+    	android:textSize="25dp"
+    	android:text="@string/write_list_name"/>
+
+    <EditText
+        android:id="@+id/input_list_name"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/text_name_list"
+        android:textSize="20dp"
+        android:inputType="text" />
+    
+    <Button
+        android:id="@+id/button1"
+        android:layout_below="@id/input_list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:padding="@dimen/padding_medium"
-        android:text="@string/hello_world"
-        tools:context=".MainActivity" />
+        android:layout_marginLeft="10dp"
+    	android:layout_marginTop="10dp"
+        android:onClick="newList"
+        android:text="@string/create_list" />
 
 </RelativeLayout>
