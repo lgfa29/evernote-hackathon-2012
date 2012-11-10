@@ -14,18 +14,8 @@
 # generated files
 bin/
 gen/
-
+.classpath
 # Local configuration file (sdk path, etc)
 local.properties
 
 .metadata/
-
-EchoprintForAndroid/EchoprintLib/bin/
-EchoprintForAndroid/EchoprintLib/gen/
-EchoprintForAndroid/EchoprintTest/bin
-EchoprintForAndroid/EchoprintTest/gen
-
-
-EchoprintForAndroid/EchoprintLib/.classpath
-EchoprintForAndroid/EchoprintTest/.classpath
-
