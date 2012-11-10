@@ -38,13 +38,7 @@ import android.widget.TextView;
 import edu.gvsu.masl.echoprint.AudioFingerprinter;
 import edu.gvsu.masl.echoprint.AudioFingerprinter.AudioFingerprinterListener;
 
-/**
- * EchoprintTestActivity<br>
- * This class demos how to use the AudioFingerprinter class
- * 
- * @author Alex Restrepo (MASL)
- *
- */
+
 public class EchoprintTestActivity extends Activity implements AudioFingerprinterListener 
 {	
 	boolean recording, resolved;
