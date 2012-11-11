@@ -96,7 +96,7 @@ public class MainActivity extends Activity {
     	Intent intent = new Intent();
     	intent.setAction(ACTION_NEW_NOTE);
     	intent.putExtra(Intent.EXTRA_TITLE, inputName.getText().toString());
-    	intent.putExtra(Intent.EXTRA_TEXT, "badabum");
+    	intent.putExtra(Intent.EXTRA_TEXT, mR.getMusicListString());
     	try {
     		startActivity(intent);
     	} catch (android.content.ActivityNotFoundException ex) {
