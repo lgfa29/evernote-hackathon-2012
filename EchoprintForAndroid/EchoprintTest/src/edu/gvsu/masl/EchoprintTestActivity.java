@@ -83,6 +83,7 @@ public class EchoprintTestActivity extends Activity implements AudioFingerprinte
             		    {
             		    	System.out.println("LETS RECORD!");
             		    	while(recording){
+            		    		System.out.println("OK!");
     	            			if(fingerprinter == null)
     		            			fingerprinter = new AudioFingerprinter(afListner);
     		            		System.out.println(">>Fingerprint");

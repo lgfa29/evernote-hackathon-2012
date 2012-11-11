@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import android.app.Activity;
+
 import android.widget.Button;
 import android.widget.TextView;
 import edu.gvsu.masl.echoprint.AudioFingerprinter;
 import edu.gvsu.masl.echoprint.AudioFingerprinter.AudioFingerprinterListener;
 
-public class MusicRecognizer extends Activity implements AudioFingerprinterListener{
+public class MusicRecognizer implements AudioFingerprinterListener{
 	
 	boolean recording, resolved;
 	AudioFingerprinter fingerprinter;
@@ -24,6 +24,7 @@ public class MusicRecognizer extends Activity implements AudioFingerprinterListe
 		
 		song_list = new ArrayList<String>();
 		afListener = this;
+		recording = true;
 		
 		new Thread(new Runnable() {
 		    public void run() 
@@ -55,6 +56,14 @@ public class MusicRecognizer extends Activity implements AudioFingerprinterListe
 	
 	public List<String> getMusicList(){
 		return song_list;
+	}
+	
+	public String getMusicListString(){
+		StringBuffer sb = new StringBuffer();
+		for(String st:song_list){
+			sb.append(st);
+		}
+		return sb.toString();
 	}
 	
 	public void didFinishListening() {					
