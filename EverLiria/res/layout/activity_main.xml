@@ -45,25 +45,35 @@
         android:layout_marginTop="10dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/green_button_selector"
-        android:onClick="newList"
+        android:onClick="stop"
         android:text="@string/stop_list" 
         android:textColor="@android:color/white"
         android:visibility="gone"/>
     
     <View 
+        android:id="@+id/stopped"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="54dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/input_list_name"
+        android:background="@drawable/elephant"/>
+    
+    <View 
         android:id="@+id/loading"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="50dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="55dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/input_list_name"
         android:visibility="gone"/>
     
-    <ListView 
+    <ListView
         android:id="@+id/music_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/input_list_name"
-        android:layout_marginTop="90dp"></ListView>
-
+        android:layout_marginTop="110dp" >
+	</ListView>
+    
 </RelativeLayout>
