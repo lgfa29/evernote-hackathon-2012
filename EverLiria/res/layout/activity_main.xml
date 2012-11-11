@@ -52,9 +52,12 @@
     
     <View 
         android:id="@+id/loading"
-        android:layout_width="fill_parent"
+        android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/input_list_name"
+        android:visibility="gone"/>
     
     <ListView 
         android:id="@+id/music_list"

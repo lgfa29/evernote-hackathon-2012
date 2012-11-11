@@ -53,8 +53,8 @@ public class MusicRecognizer extends Activity implements AudioFingerprinterListe
 		recording = false;
 	}
 	
-	public String[] getMusicList(){
-		return (String[]) song_list.toArray();
+	public List<String> getMusicList(){
+		return song_list;
 	}
 	
 	public void didFinishListening() {					
