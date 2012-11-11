@@ -4,11 +4,23 @@
     android:layout_height="match_parent" >
     
     <TextView 
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:background="@color/green"
+    	android:padding="3dp"
+    	android:gravity="center"
+    	android:textSize="30dp"
+    	android:textColor="@android:color/white"
+    	android:textStyle="bold"
+    	android:text="@string/app_name"/>
+    
+    <TextView 
         android:id="@+id/text_name_list"
         android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
     	android:layout_marginLeft="15dp"
-    	android:layout_marginTop="20dp"
+    	android:layout_marginTop="57dp"
     	android:textSize="20dp"
     	android:textColor="@color/green"
     	android:textStyle="bold"
@@ -18,7 +30,7 @@
         android:id="@+id/input_list_name"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="3dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_below="@id/text_name_list"
@@ -30,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/input_list_name"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="25dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/green_button_selector"
         android:onClick="start"
@@ -42,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/input_list_name"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="25dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/green_button_selector"
         android:onClick="stop"
@@ -54,7 +66,7 @@
         android:id="@+id/stopped"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="54dp"
+        android:layout_marginTop="69dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/input_list_name"
         android:background="@drawable/elephant"/>
@@ -63,7 +75,7 @@
         android:id="@+id/loading"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="70dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/input_list_name"
         android:visibility="gone"/>
@@ -73,7 +85,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/input_list_name"
-        android:layout_marginTop="110dp" >
+        android:layout_marginTop="125dp" 
+        android:layout_marginBottom="10dp">
 	</ListView>
     
 </RelativeLayout>
