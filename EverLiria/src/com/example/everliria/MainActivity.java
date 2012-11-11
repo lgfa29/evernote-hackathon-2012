@@ -27,11 +27,11 @@ public class MainActivity extends Activity {
 	EditText inputName;
 	Button startListening;
 	Button stopListening;
-	Button createNote;
 	ListView musicList;
 	AnimationDrawable frameAnimation;
 	View loading;
 	View stopped;
+	View create;
 	List<String> musics;
 	CustomAdapter adapter;
 	BroadcastReceiver bcReceiver;
@@ -45,7 +45,6 @@ public class MainActivity extends Activity {
         
         startListening = (Button)findViewById(R.id.start);
         stopListening = (Button)findViewById(R.id.stop);
-        createNote = (Button)findViewById(R.id.create);
         
         stopped = (View)findViewById(R.id.stopped);
         stopped.getBackground().setAlpha(50);
@@ -54,6 +53,10 @@ public class MainActivity extends Activity {
         musics = new ArrayList<String>();
         musicList = (ListView)findViewById(R.id.music_list);
         adapter = new CustomAdapter();
+        
+        View v = getLayoutInflater().inflate(R.layout.create_button, null);
+        musicList.addFooterView(v);
+        create = findViewById(R.id.create);
         musicList.setAdapter(adapter);
         
     	bcReceiver = new BroadcastReceiver() {
@@ -96,13 +99,13 @@ public class MainActivity extends Activity {
     public void start(View view) {
     	startListening.setVisibility(View.GONE);
     	stopListening.setVisibility(View.VISIBLE);
-    	createNote.setVisibility(View.GONE);
     	stopped.setVisibility(View.GONE);
     	loading.setVisibility(View.VISIBLE);
     	loading.setBackgroundResource(R.drawable.ever_loading);
     	frameAnimation = (AnimationDrawable) loading.getBackground();
     	frameAnimation.setAlpha(50);
     	frameAnimation.start();
+		create.setVisibility(View.GONE);
     	
     	startService(new Intent(this, MusicRecognizer.class));
     }
@@ -110,9 +113,9 @@ public class MainActivity extends Activity {
     public void stop(View view){
     	startListening.setVisibility(View.VISIBLE);
     	stopListening.setVisibility(View.GONE);
-    	createNote.setVisibility(View.VISIBLE);
     	stopped.setVisibility(View.VISIBLE);
     	loading.setVisibility(View.GONE);
+    	create.setVisibility(View.VISIBLE);
     	startService(new Intent(this, MusicRecognizer.class));
     }
     
