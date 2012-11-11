@@ -1,6 +1,7 @@
 package com.example.everliria;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import android.app.Activity;
@@ -8,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -33,9 +35,11 @@ public class MainActivity extends Activity {
 	List<String> musics;
 	CustomAdapter adapter;
 	BroadcastReceiver bcReceiver;
+	SharedPreferences sharedPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+    	sharedPref = getSharedPreferences(Constants.PREFS_NAME, MODE_PRIVATE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
@@ -109,7 +113,10 @@ public class MainActivity extends Activity {
     	loading.setVisibility(View.GONE);
     	
 //    	startService(new Intent(this, MusicRecognizer.class));
-    	
+    	SharedPreferences.Editor editor = sharedPref.edit();
+    	editor.putStringSet(Constants.PREFS_SONGS, new HashSet<String>(musics));
+    	editor.putString(Constants.PREFS_TITLE, inputName.getText().toString());
+    	editor.commit();
     	Intent intent = new Intent(this, ImagePickerActivity.class);
     	startActivity(intent);
 //    	intent.setAction(ACTION_NEW_NOTE);
@@ -121,14 +128,6 @@ public class MainActivity extends Activity {
 //    		ex.printStackTrace();
 //    		Toast.makeText(this, R.string.err_activity_not_found, Toast.LENGTH_SHORT).show();
 //	  } 
-    }
-    
-    private String formatMusicList(List<String> musics) {
-    	StringBuilder musicList = new StringBuilder();
-    	for (String music : musics)
-    		musicList.append(music+"\n");
-    			
-    	return musicList.toString();
     }
 
     public class CustomAdapter extends BaseAdapter {

@@ -39,7 +39,7 @@
 
         <activity android:name=".ImagePickerActivity"
             android:theme="@android:style/Theme.Light.NoTitleBar"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait" android:launchMode="singleTask" >
             </activity>
             
         <activity android:name="com.chute.android.multiimagepicker.app.MultiImagePickerActivity"
