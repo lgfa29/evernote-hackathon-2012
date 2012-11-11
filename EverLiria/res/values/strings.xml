@@ -9,5 +9,5 @@
     <string name="create_note">CREATE NOTE</string>
     <string name="write_list_name">LIST NAME</string>
     <string name="err_activity_not_found">Install Evernote App to Continue</string>
-
+	<string name="select_photos">Select Photos</string>
 </resources>
