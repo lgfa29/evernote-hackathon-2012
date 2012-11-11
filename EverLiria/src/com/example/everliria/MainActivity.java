@@ -112,18 +112,19 @@ public class MainActivity extends Activity {
     	stopListening.setVisibility(View.GONE);
     	loading.setVisibility(View.GONE);
     	
-    	startService(new Intent(this, MusicRecognizer.class));
+//    	startService(new Intent(this, MusicRecognizer.class));
     	
-    	Intent intent = new Intent();
-    	intent.setAction(ACTION_NEW_NOTE);
-    	intent.putExtra(Intent.EXTRA_TITLE, inputName.getText().toString());
-    	intent.putExtra(Intent.EXTRA_TEXT, formatMusicList(musics));
-    	try {
-    		startActivity(intent);
-    	} catch (android.content.ActivityNotFoundException ex) {
-    		ex.printStackTrace();
-    		Toast.makeText(this, R.string.err_activity_not_found, Toast.LENGTH_SHORT).show();
-	  } 
+    	Intent intent = new Intent(this, ImagePickerActivity.class);
+    	startActivity(intent);
+//    	intent.setAction(ACTION_NEW_NOTE);
+//    	intent.putExtra(Intent.EXTRA_TITLE, inputName.getText().toString());
+//    	intent.putExtra(Intent.EXTRA_TEXT, formatMusicList(musics));
+//    	try {
+//    		startActivity(intent);
+//    	} catch (android.content.ActivityNotFoundException ex) {
+//    		ex.printStackTrace();
+//    		Toast.makeText(this, R.string.err_activity_not_found, Toast.LENGTH_SHORT).show();
+//	  } 
     }
     
     private String formatMusicList(List<String> musics) {
