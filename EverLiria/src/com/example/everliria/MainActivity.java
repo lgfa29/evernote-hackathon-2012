@@ -45,6 +45,8 @@ public class MainActivity extends Activity {
         loading = (View)findViewById(R.id.loading);
         		
         musics = new ArrayList<String>();
+        musics.add("aaaa");
+        musics.add("bbb");
         		
         musicList = (ListView)findViewById(R.id.music_list);
         adapter = new CustomAdapter();
