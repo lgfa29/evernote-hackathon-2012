@@ -66,6 +66,8 @@ public class MainActivity extends Activity {
 						musics.add(song);
 						adapter.notifyDataSetChanged();
 						Toast.makeText(context, "New music added!", Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(context, song+" is already in the list.", Toast.LENGTH_LONG);
 					}
 				} else if (bundle.containsKey(Constants.INTENT_ACTION_MUSIC_NOT_FOUND)) {
 					Toast.makeText(context, "Music not found.", Toast.LENGTH_LONG).show();
