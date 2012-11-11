@@ -27,9 +27,11 @@ public class MainActivity extends Activity {
 	EditText inputName;
 	Button startListening;
 	Button stopListening;
+	Button createNote;
 	ListView musicList;
 	AnimationDrawable frameAnimation;
 	View loading;
+	View stopped;
 	List<String> musics;
 	CustomAdapter adapter;
 	BroadcastReceiver bcReceiver;
@@ -40,20 +42,20 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         inputName = (EditText)findViewById(R.id.input_list_name);
+        
         startListening = (Button)findViewById(R.id.start);
         stopListening = (Button)findViewById(R.id.stop);
+        createNote = (Button)findViewById(R.id.create);
+        
+        stopped = (View)findViewById(R.id.stopped);
+        stopped.getBackground().setAlpha(50);
         loading = (View)findViewById(R.id.loading);
         		
         musics = new ArrayList<String>();
-        		
         musicList = (ListView)findViewById(R.id.music_list);
         adapter = new CustomAdapter();
         musicList.setAdapter(adapter);
         
-        loading.setBackgroundResource(R.drawable.ever_loading);
-    	frameAnimation = (AnimationDrawable) loading.getBackground();
-    	frameAnimation.setAlpha(50);
-    	
     	bcReceiver = new BroadcastReceiver() {
 			@Override
 			public void onReceive(Context context, Intent intent) {
@@ -94,9 +96,23 @@ public class MainActivity extends Activity {
     public void start(View view) {
     	startListening.setVisibility(View.GONE);
     	stopListening.setVisibility(View.VISIBLE);
+    	createNote.setVisibility(View.GONE);
+    	stopped.setVisibility(View.GONE);
     	loading.setVisibility(View.VISIBLE);
+    	loading.setBackgroundResource(R.drawable.ever_loading);
+    	frameAnimation = (AnimationDrawable) loading.getBackground();
+    	frameAnimation.setAlpha(50);
     	frameAnimation.start();
     	
+    	startService(new Intent(this, MusicRecognizer.class));
+    }
+    
+    public void stop(View view){
+    	startListening.setVisibility(View.VISIBLE);
+    	stopListening.setVisibility(View.GONE);
+    	createNote.setVisibility(View.VISIBLE);
+    	stopped.setVisibility(View.VISIBLE);
+    	loading.setVisibility(View.GONE);
     	startService(new Intent(this, MusicRecognizer.class));
     }
     
@@ -104,12 +120,6 @@ public class MainActivity extends Activity {
      * Bring up an empty "New Not" activity in Evernote for Android.
      */
     public void newList(View view) {
-    	startListening.setVisibility(View.VISIBLE);
-    	stopListening.setVisibility(View.GONE);
-    	loading.setVisibility(View.GONE);
-    	
-    	startService(new Intent(this, MusicRecognizer.class));
-    	
     	Intent intent = new Intent();
     	intent.setAction(ACTION_NEW_NOTE);
     	intent.putExtra(Intent.EXTRA_TITLE, inputName.getText().toString());
