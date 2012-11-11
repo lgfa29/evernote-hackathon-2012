@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.view.Menu;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,9 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	// culpa da mayra
+
 	// Names of Evernote-specific Intent actions and extras
-	public static final String ACTION_NEW_NOTE             = "com.evernote.action.CREATE_NEW_NOTE";
+	public static final String ACTION_NEW_NOTE = "com.evernote.action.CREATE_NEW_NOTE";
 	
 	EditText inputName;
 	Button startListening;
@@ -30,8 +33,7 @@ public class MainActivity extends Activity {
 	View loading;
 	List<String> musics;
 	CustomAdapter adapter;
-	
-	MusicRecognizer mR = new MusicRecognizer();
+	BroadcastReceiver bcReceiver;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,58 +53,85 @@ public class MainActivity extends Activity {
         loading.setBackgroundResource(R.drawable.ever_loading);
     	frameAnimation = (AnimationDrawable) loading.getBackground();
     	frameAnimation.setAlpha(50);
+    	
+    	bcReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				
+				Log.d(Constants.LOG_TAG, "Voltou! Quanto tempo!");
+				
+				Bundle bundle = intent.getExtras();
+				
+				if (bundle.containsKey(Constants.INTENT_ACTION_MUSIC_FOUND)) {
+					String song = bundle.getString(Constants.INTENT_ACTION_MUSIC_FOUND);
+					musics.add(song);
+					
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							adapter.notifyDataSetChanged();
+						}
+					});
+				} else if (bundle.containsKey(Constants.INTENT_ACTION_MUSIC_NOT_FOUND)) {
+					Toast.makeText(context, "Music not found.", Toast.LENGTH_LONG).show();
+				} else if (bundle.containsKey(Constants.INTENT_ACTION_ERROR)) {
+					Toast.makeText(context, "Error while trying to identify music.", Toast.LENGTH_LONG).show();
+				}
+			}
+		};
     }
-
+    
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
-        return true;
+    public void onResume() {
+    	super.onResume();
+    	registerReceiver(bcReceiver, new IntentFilter(Constants.INTENT_FILTER_TAG));
+    }
+    
+    @Override
+    public void onPause() {
+    	super.onPause();
+    	unregisterReceiver(bcReceiver);
     }
     
     public void start(View view) {
-    	mR.startListening();
     	startListening.setVisibility(View.GONE);
     	stopListening.setVisibility(View.VISIBLE);
     	loading.setVisibility(View.VISIBLE);
     	frameAnimation.start();
-    	new Thread(new Runnable(){
-
-			public void run() {
-				for (int i=0; i < 10; i++) {
-					musics = mR.getMusicList();
-					adapter.notifyDataSetChanged();
-					synchronized(this){
-						try {
-							wait(10000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
-			}});
     	
+    	startService(new Intent(this, MusicRecognizer.class));
+    	
+    	Log.d(Constants.LOG_TAG, "Clique!");
     }
     
     /**
      * Bring up an empty "New Not" activity in Evernote for Android.
      */
     public void newList(View view) {
-    	mR.stopListening();
     	startListening.setVisibility(View.VISIBLE);
     	stopListening.setVisibility(View.GONE);
     	loading.setVisibility(View.GONE);
     	
+    	startService(new Intent(this, MusicRecognizer.class));
+    	
     	Intent intent = new Intent();
     	intent.setAction(ACTION_NEW_NOTE);
     	intent.putExtra(Intent.EXTRA_TITLE, inputName.getText().toString());
-    	intent.putExtra(Intent.EXTRA_TEXT, mR.getMusicListString());
+    	intent.putExtra(Intent.EXTRA_TEXT, formatMusicList(musics));
     	try {
     		startActivity(intent);
     	} catch (android.content.ActivityNotFoundException ex) {
     		ex.printStackTrace();
     		Toast.makeText(this, R.string.err_activity_not_found, Toast.LENGTH_SHORT).show();
 	  } 
+    }
+    
+    private String formatMusicList(List<String> musics) {
+    	StringBuilder musicList = new StringBuilder();
+    	for (String music : musics)
+    		musicList.append(music+"\n");
+    			
+    	return musicList.toString();
     }
 
     public class CustomAdapter extends BaseAdapter {
@@ -122,7 +151,7 @@ public class MainActivity extends Activity {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
-				convertView = getLayoutInflater().inflate(R.layout.item, parent);
+				convertView = getLayoutInflater().inflate(R.layout.item, null, false);
 			}
 			TextView tv = (TextView)convertView.findViewById(R.id.music_item);
 			tv.setText(musics.get(position));

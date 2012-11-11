@@ -1,125 +1,135 @@
 package com.example.everliria;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 
-
-import android.widget.Button;
-import android.widget.TextView;
+import android.app.IntentService;
+import android.content.Intent;
+import android.util.Log;
 import edu.gvsu.masl.echoprint.AudioFingerprinter;
 import edu.gvsu.masl.echoprint.AudioFingerprinter.AudioFingerprinterListener;
 
-public class MusicRecognizer implements AudioFingerprinterListener{
+public class MusicRecognizer extends IntentService implements AudioFingerprinterListener{
 	
-	boolean recording, resolved;
-	AudioFingerprinter fingerprinter;
-	TextView status;
-	List<String> song_list;
-	Button btn;
-	String currentsong;
-	AudioFingerprinterListener afListener;
+	private static final String THREAD_NAME = "musicRecognizer";
 	
-	public void startListening(){
-		
-		song_list = new ArrayList<String>();
-		afListener = this;
-		recording = true;
-		
-		new Thread(new Runnable() {
-		    public void run() 
-		    {
-		    	System.out.println("LETS RECORD!");
-		    	while(recording){
-        			if(fingerprinter == null)
-            			fingerprinter = new AudioFingerprinter(afListener);
-            		System.out.println(">>Fingerprint");
-            		fingerprinter.fingerprint(20);
-            		//Now waits for 40 seconds
-                    try {
-                        synchronized(this){
-                            wait(40000);
-                        }
-                    }
-                    catch(InterruptedException ex){                    
-                    }
-    			}
-		    }
-		}).start();
+	private static final int RECORD_TIME = 20;
+	private static final int INTERVAL_TIME = 40;
+
+	private boolean recording, resolved;
+	private AudioFingerprinter fingerprinter;
+	private String currentSongId;
+	
+	
+	public MusicRecognizer() {
+		super(THREAD_NAME);
 	}
 	
-	public void stopListening(){
+	public MusicRecognizer(String name) {
+		super(THREAD_NAME);
+	}
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		
+		recording = false;
+		resolved = false;
+		currentSongId = "";
+		
+		if (fingerprinter == null)
+			fingerprinter = new AudioFingerprinter(this);
+		
+		Log.d(Constants.LOG_TAG, "Chamou o intent!");
+	}
+	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		return super.onStartCommand(intent, flags, startId);
+	}
+	
+	@Override
+	public void onDestroy() {
 		if (fingerprinter != null)
 			fingerprinter.stop();
-		recording = false;
 	}
 	
-	public List<String> getMusicList(){
-		return song_list;
-	}
-	
-	public String getMusicListString(){
-		StringBuffer sb = new StringBuffer();
-		for(String st:song_list){
-			sb.append(st);
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		Log.d(Constants.LOG_TAG, "Chegou um intent!");
+		
+		if (recording) {
+			recording = false;
+			if (fingerprinter != null)
+				fingerprinter.stop();
+			
+		} else {
+			recording = true;
+			
+			if (fingerprinter == null)
+				fingerprinter = new AudioFingerprinter(this);
+			
+			while(recording) {
+				try {
+					fingerprinter.fingerprint(RECORD_TIME);
+					Thread.sleep(INTERVAL_TIME*1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-		return sb.toString();
 	}
 	
-	public void didFinishListening() {					
-		//btn.setText("Start");
-		
+	public void didFinishListening() {
 		if(!resolved)
-			System.out.println("Idle...");
-			//status.setText("Idle...");
-		
-		//recording = false;
+			Log.d(Constants.LOG_TAG, "Idle...");
 	}
-	
-	public void didFinishListeningPass()
-	{}
 
 	public void willStartListening() {
-		//status.setText("Listening...");
-		System.out.println("Listening...");
-		//btn.setText("Stop");
-		//recording = true;
+		Log.d(Constants.LOG_TAG, "Listening...");
 		resolved = false;
 	}
 
-	public void willStartListeningPass() 
-	{}
-
 	public void didGenerateFingerprintCode(String code) {
-		//status.setText("Will fetch info for code starting:\n" + code.substring(0, Math.min(50, code.length())));
+		Log.d(Constants.LOG_TAG, "Will fetch info for code starting:\n" + code.substring(0, Math.min(50, code.length())));
 	}
 
-	public void didFindMatchForCode(final Hashtable<String, String> table,
-			String code) {
+	public void didFindMatchForCode(final Hashtable<String, String> table, String code) {
 		resolved = true;
-		//status.setText("Match: \n" + table);
 		String song = table.get("artist_name") + " - " + table.get("title");
 		String id = table.get("id");
-		System.out.println("[ID] "+id);
-		System.out.println("[CURRENT SONG] "+currentsong);
-		if (!id.equals(currentsong)){
-			currentsong = id;
-			song_list.add(song);
-			//song_list.setText(song_list.getText() + "\n" + song);
+		
+		Log.d(Constants.LOG_TAG, "[ID] " + id);
+		Log.d(Constants.LOG_TAG, "[CURRENT SONG] " + currentSongId);
+		
+		if (!id.equals(currentSongId)){
+			currentSongId = id;
+			sendIntent(Constants.INTENT_ACTION_MUSIC_FOUND, song);
 		}
 		
 	}
 
 	public void didNotFindMatchForCode(String code) {
 		resolved = true;
-		System.out.println("No match for code starting with: \n" + code.substring(0, Math.min(50, code.length())));
-		//status.setText("No match for code starting with: \n" + code.substring(0, Math.min(50, code.length())));
+		
+		Log.d(Constants.LOG_TAG,"No match for code starting with: \n" + code.substring(0, Math.min(50, code.length())));
+		sendIntent(Constants.INTENT_ACTION_MUSIC_NOT_FOUND, "");
 	}
 
 	public void didFailWithException(Exception e) {
 		resolved = true;
-		System.out.println("Error: " + e);
-		//status.setText("Error: " + e);
+		
+		e.printStackTrace();
+		Log.e(Constants.LOG_TAG, "Error");
+		sendIntent(Constants.INTENT_ACTION_ERROR, e.getMessage());
+	}
+	
+	public void didFinishListeningPass() {}
+	public void willStartListeningPass() {}
+	
+	private void sendIntent(String tag, String message) {
+		Intent responseIntent = new Intent(Constants.INTENT_FILTER_TAG);
+		responseIntent.putExtra(tag, message);
+		getApplicationContext().sendBroadcast(responseIntent);
 	}
 
 }
