@@ -45,8 +45,6 @@ public class MainActivity extends Activity {
         loading = (View)findViewById(R.id.loading);
         		
         musics = new ArrayList<String>();
-        musics.add("aaaa");
-        musics.add("bbb");
         		
         musicList = (ListView)findViewById(R.id.music_list);
         adapter = new CustomAdapter();
@@ -69,7 +67,7 @@ public class MainActivity extends Activity {
 						adapter.notifyDataSetChanged();
 						Toast.makeText(context, "New music added!", Toast.LENGTH_LONG).show();
 					} else {
-						Toast.makeText(context, song+" is already in the list.", Toast.LENGTH_LONG);
+						Toast.makeText(context, song+" is already in the list.", Toast.LENGTH_LONG).show();
 					}
 				} else if (bundle.containsKey(Constants.INTENT_ACTION_MUSIC_NOT_FOUND)) {
 					Toast.makeText(context, "Music not found.", Toast.LENGTH_LONG).show();
