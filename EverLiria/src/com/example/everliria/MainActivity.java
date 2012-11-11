@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -39,6 +38,7 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
         inputName = (EditText)findViewById(R.id.input_list_name);
         startListening = (Button)findViewById(R.id.start);
         stopListening = (Button)findViewById(R.id.stop);
@@ -58,20 +58,17 @@ public class MainActivity extends Activity {
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				
-				Log.d(Constants.LOG_TAG, "Voltou! Quanto tempo!");
-				
 				Bundle bundle = intent.getExtras();
 				
-				if (bundle.containsKey(Constants.INTENT_ACTION_MUSIC_FOUND)) {
-					String song = bundle.getString(Constants.INTENT_ACTION_MUSIC_FOUND);
-					musics.add(song);
-					
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							adapter.notifyDataSetChanged();
-						}
-					});
+				if (bundle.containsKey(Constants.INTENT_ACTION_MUSIC_NAME)) {
+					String song = bundle.getString(Constants.INTENT_ACTION_MUSIC_NAME);
+					if (!musics.contains(song)) {
+						musics.add(song);
+						adapter.notifyDataSetChanged();
+						Toast.makeText(context, "New music added!", Toast.LENGTH_LONG).show();
+					} else {
+						Toast.makeText(context, song+" is already in the list.", Toast.LENGTH_LONG).show();
+					}
 				} else if (bundle.containsKey(Constants.INTENT_ACTION_MUSIC_NOT_FOUND)) {
 					Toast.makeText(context, "Music not found.", Toast.LENGTH_LONG).show();
 				} else if (bundle.containsKey(Constants.INTENT_ACTION_ERROR)) {
@@ -85,6 +82,7 @@ public class MainActivity extends Activity {
     public void onResume() {
     	super.onResume();
     	registerReceiver(bcReceiver, new IntentFilter(Constants.INTENT_FILTER_TAG));
+    	adapter.notifyDataSetChanged();
     }
     
     @Override
@@ -100,8 +98,6 @@ public class MainActivity extends Activity {
     	frameAnimation.start();
     	
     	startService(new Intent(this, MusicRecognizer.class));
-    	
-    	Log.d(Constants.LOG_TAG, "Clique!");
     }
     
     /**

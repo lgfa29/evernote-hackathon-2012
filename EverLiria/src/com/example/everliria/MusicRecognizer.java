@@ -17,7 +17,6 @@ public class MusicRecognizer extends IntentService implements AudioFingerprinter
 
 	private boolean recording, resolved;
 	private AudioFingerprinter fingerprinter;
-	private String currentSongId;
 	
 	
 	public MusicRecognizer() {
@@ -34,7 +33,6 @@ public class MusicRecognizer extends IntentService implements AudioFingerprinter
 		
 		recording = false;
 		resolved = false;
-		currentSongId = "";
 		
 		if (fingerprinter == null)
 			fingerprinter = new AudioFingerprinter(this);
@@ -85,8 +83,8 @@ public class MusicRecognizer extends IntentService implements AudioFingerprinter
 	}
 
 	public void willStartListening() {
-		Log.d(Constants.LOG_TAG, "Listening...");
 		resolved = false;
+		Log.d(Constants.LOG_TAG, "Listening...");
 	}
 
 	public void didGenerateFingerprintCode(String code) {
@@ -95,16 +93,14 @@ public class MusicRecognizer extends IntentService implements AudioFingerprinter
 
 	public void didFindMatchForCode(final Hashtable<String, String> table, String code) {
 		resolved = true;
+		
 		String song = table.get("artist_name") + " - " + table.get("title");
 		String id = table.get("id");
 		
 		Log.d(Constants.LOG_TAG, "[ID] " + id);
-		Log.d(Constants.LOG_TAG, "[CURRENT SONG] " + currentSongId);
+		Log.d(Constants.LOG_TAG, "[CURRENT SONG] " + song);
 		
-		if (!id.equals(currentSongId)){
-			currentSongId = id;
-			sendIntent(Constants.INTENT_ACTION_MUSIC_FOUND, song);
-		}
+		sendIntent(Constants.INTENT_ACTION_MUSIC_NAME, song);
 		
 	}
 
